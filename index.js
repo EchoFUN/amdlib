@@ -85,8 +85,10 @@ module.exports.getDependency = function (path, deps) {
 
   if (deps != 1) {
     var currentTree = _dependency(path) || [];
+    console.log(currentTree);
+    
     for (var i = 0; i < currentTree.length; i++) {
-      tree[currentTree[i]] = this.getDependency(currentTree[i]);
+      this.getDependency(currentTree[i]);
     }
   } else {
     return _dependency(path);
