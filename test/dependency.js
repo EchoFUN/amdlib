@@ -13,4 +13,3 @@ amdlib.config({
 });
 
 var dependency = amdlib.getDependency('page/restaurant/restaurant');
-

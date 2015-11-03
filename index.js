@@ -2,35 +2,34 @@
 
 /**
  * 
- * 
+ * @author XU Kai(xukai.ken@gmail.com) botobe.net
+ * @date 2015-11-04 星期三
  * 
  * Ex:
  * 
- * var amdlib = require('amdlib');
- * amdlib.config({
+ * var AmdLib = require('amdlib');
+ * AmdLib.config({
  *   basePath: '/'
  * });
+ * 
+ * AmdLib.getDependency('page/xxx');
  * 
  */
 var fs = require('fs');
 var esprima = require('esprima');
 var estraverse = require('estraverse');
 
-var AMDLib = function () {
-
+var basePath;
+exports.config = function (opts) {
+  basePath = opts.basePath;
 };
 
-
-module.exports.config = function (opts) {
-  this.basePath = opts.basePath;
-};
-
-module.exports.getSingleDependency = function (path) {
-  if (!this.basePath) {
+function _dependency (path) {
+  if (!basePath) {
     process.exit();
   }
 
-  var modulePath = this.basePath + path;
+  var modulePath = basePath + path;
   var suffixExpress = /\.([^\.]+)$/;
   var results = suffixExpress.exec(modulePath);
   var ext;
@@ -45,24 +44,28 @@ module.exports.getSingleDependency = function (path) {
     if (isExists) {
       var buffer = fs.readFileSync(modulePath, 'utf8');
       var ast = esprima.parse(buffer);
-
+      
+      var dependencyArray;
       estraverse.traverse(ast, {
         enter: function (node, parent) {
           try {
-            if (parent.type === 'CallExpression' && parent.callee.name === 'require'
-                && node.type === 'ArrayExpression' && node.elements.length != 0) {
-                
-              debugger;
-                
+            var elements = node.elements, name = parent.callee.name;
+            if (parent.type == 'CallExpression' && (name == 'require' || name == 'define') && node.type == 'ArrayExpression' && elements.length != 0) {
+              dependencyArray = elements; 
+              this.skip();
             }
           } catch (e) {
-            return estraverse.VisitorOption.Skip;
+            ;
           }
-        
         }
-      })
+      });
+      
+      dependencyArray.forEach(function (current, index, thisArray) {
+        thisArray[index] = current.value;
+      });
+      return dependencyArray;
     } else {
-      console.log('Path do not exists !');
+      console.log('Path "' + modulePath + '" do not exists !');
       process.exit();
     }
   } catch (e) {
@@ -77,13 +80,15 @@ module.exports.getSingleDependency = function (path) {
  * 
  * 
  */
+var tree = {};
 module.exports.getDependency = function (path, deps) {
 
-  if (deps && deps != 1) {
-
+  if (deps != 1) {
+    var currentTree = _dependency(path) || [];
+    for (var i = 0; i < currentTree.length; i++) {
+      tree[currentTree[i]] = this.getDependency(currentTree[i]);
+    }
   } else {
-    return this.getSingleDependency(path);
+    return _dependency(path);
   }
-
-
 };
