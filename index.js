@@ -12,9 +12,9 @@
  * });
  * 
  */
-
 var fs = require('fs');
 var esprima = require('esprima');
+var estraverse = require('estraverse');
 
 var AMDLib = function () {
 
@@ -39,14 +39,28 @@ module.exports.getSingleDependency = function (path) {
   } catch (e) {
     modulePath += '.js';
   }
-  
+
   try {
     var isExists = fs.existsSync(modulePath);
     if (isExists) {
-      
       var buffer = fs.readFileSync(modulePath, 'utf8');
-      
-      console.log(buffer);
+      var ast = esprima.parse(buffer);
+
+      estraverse.traverse(ast, {
+        enter: function (node, parent) {
+          try {
+            if (parent.type === 'CallExpression' && parent.callee.name === 'require'
+                && node.type === 'ArrayExpression' && node.elements.length != 0) {
+                
+              debugger;
+                
+            }
+          } catch (e) {
+            return estraverse.VisitorOption.Skip;
+          }
+        
+        }
+      })
     } else {
       console.log('Path do not exists !');
       process.exit();
