@@ -15,6 +15,7 @@
 
 var fs = require('fs');
 var Q = require('q');
+var esprima = require('esprima');
 
 var AMDLib = function () {
 
