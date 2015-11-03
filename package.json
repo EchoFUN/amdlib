@@ -1,0 +1,21 @@
+{
+  "name": "amdlib",
+  "version": "0.0.1",
+  "description": "Tools for AMD standard. check module legal, find dependency etc.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/EchoFUN/amdlib.git"
+  },
+  "keywords": [
+    "amd"
+  ],
+  "author": "XU Kai",
+  "license": "MIT",
+  "dependencies": {
+    "esprima": "~2.7.0"
+  }
+}
