@@ -14,7 +14,6 @@
  */
 
 var fs = require('fs');
-var Q = require('q');
 var esprima = require('esprima');
 
 var AMDLib = function () {
@@ -40,24 +39,21 @@ module.exports.getSingleDependency = function (path) {
   } catch (e) {
     modulePath += '.js';
   }
-
-  Q.nfcall(fs.exists, modulePath, function (res) {
-
-    if (res) {
-      Q.nfcall(fs.readFile, modulePath, 'utf8').then(function (buffer) {
-        
-        console.log(buffer);
-        
-      }).fail(function () {
-        
-      });
+  
+  try {
+    var isExists = fs.existsSync(modulePath);
+    if (isExists) {
+      
+      var buffer = fs.readFileSync(modulePath, 'utf8');
+      
+      console.log(buffer);
     } else {
       console.log('Path do not exists !');
       process.exit();
     }
-  }).fail(function () {
-
-  });
+  } catch (e) {
+    ;
+  }
 
 };
 
