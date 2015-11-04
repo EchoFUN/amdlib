@@ -79,24 +79,34 @@ function _dependency (path) {
 /**
  * 
  * 
- * 
+ * @path String 需要分析的模块的路径
+ * @deps Number 需要遍历的模块的深度
+ * @isflat Boolean 返回值的格式，是否为一个树，如果设置为false，则返回的是一个扁平化的结构
  * 
  */
 var tree = {}, transversed = {};
-module.exports.getDependency = function (path, deps) {
+module.exports.getDependency = function (path, deps, isflat) {
 
   if (deps != 1) {
     var currentTree = [];
     if (!transversed[path]) {
       currentTree = _dependency(path) || [];
-    
-      console.log('');
-      console.log(path + ' Module dependency:');
-      console.log(currentTree);
+      
+      /*
+      if (deps && deps-- == 0) {
+        if (isflat) {
+          return transversed;
+        }
+      }
+      */
       
       for (var i = 0; i < currentTree.length; i++) {
         this.getDependency(currentTree[i]);
       }
+    }
+    
+    if (isflat) {
+      return transversed; 
     }
   } else {
     return _dependency(path);
