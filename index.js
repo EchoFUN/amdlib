@@ -28,6 +28,8 @@ function _dependency (path) {
   if (!basePath) {
     process.exit();
   }
+  
+  transversed[path] = true;
 
   var modulePath = basePath + path;
   var suffixExpress = /\.([^\.]+)$/;
@@ -80,15 +82,21 @@ function _dependency (path) {
  * 
  * 
  */
-var tree = {};
+var tree = {}, transversed = {};
 module.exports.getDependency = function (path, deps) {
 
   if (deps != 1) {
-    var currentTree = _dependency(path) || [];
-    console.log(currentTree);
+    var currentTree = [];
+    if (!transversed[path]) {
+      currentTree = _dependency(path) || [];
     
-    for (var i = 0; i < currentTree.length; i++) {
-      this.getDependency(currentTree[i]);
+      console.log('');
+      console.log(path);
+      console.log(currentTree);
+      
+      for (var i = 0; i < currentTree.length; i++) {
+        this.getDependency(currentTree[i]);
+      }
     }
   } else {
     return _dependency(path);
