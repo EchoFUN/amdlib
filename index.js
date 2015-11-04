@@ -91,7 +91,7 @@ module.exports.getDependency = function (path, deps) {
       currentTree = _dependency(path) || [];
     
       console.log('');
-      console.log(path);
+      console.log(path + ' Module dependency:');
       console.log(currentTree);
       
       for (var i = 0; i < currentTree.length; i++) {
