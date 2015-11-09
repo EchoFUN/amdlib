@@ -19,13 +19,21 @@ var fs = require('fs');
 var esprima = require('esprima');
 var estraverse = require('estraverse');
 
-var basePath = '';
+/**
+ * 核心配置文件
+ * 
+ * conf.basePath: 基础路径信息
+ * conf.paths: 路径的别名
+ * 
+ */
+var conf = {};
+conf.basePath = '';
 exports.config = function (opts) {
-  basePath = opts.basePath || '';
+  conf.basePath = opts.basePath || '';
 };
 
 var _resolvePath = function (path) {
-  var modulePath = basePath + path;
+  var modulePath = conf.basePath + path;
   var suffixExpress = /\.([^\.]+)$/;
   var results = suffixExpress.exec(modulePath);
   var ext;
@@ -40,8 +48,13 @@ var _resolvePath = function (path) {
 
 function _dependency(path) {
   transversed[path] = true;
-
-  var modulePath = _resolvePath(path);
+  
+  // 路径的映射
+  var aliasPath = path;
+  if (conf.paths && conf.paths[path]) {
+    aliasPath = conf.paths[path]
+  }
+  var modulePath = _resolvePath(aliasPath);
   try {
     var isExists = fs.existsSync(modulePath);
     if (isExists) {
@@ -139,4 +152,21 @@ module.exports.isValidateAMD = function (path) {
   }
 
 
+};
+
+/**
+ * 设置配置文件
+ * 
+ * 
+ */
+module.exports.set = function (opts) {
+  if (!opts) {
+    return;
+  }
+  
+  for (var i in opts) {
+    if (opts.hasOwnProperty(i) && !!opts[i]) {
+      conf[i] = opts[i];
+    }
+  }
 };
