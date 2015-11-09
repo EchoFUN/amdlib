@@ -19,18 +19,12 @@ var fs = require('fs');
 var esprima = require('esprima');
 var estraverse = require('estraverse');
 
-var basePath;
+var basePath = '';
 exports.config = function (opts) {
   basePath = opts.basePath || '';
 };
 
-function _dependency(path) {
-  if (!basePath) {
-    process.exit();
-  }
-
-  transversed[path] = true;
-
+var _resolvePath = function (path) {
   var modulePath = basePath + path;
   var suffixExpress = /\.([^\.]+)$/;
   var results = suffixExpress.exec(modulePath);
@@ -41,6 +35,13 @@ function _dependency(path) {
     modulePath += '.js';
   }
 
+  return modulePath;
+};
+
+function _dependency(path) {
+  transversed[path] = true;
+
+  var modulePath = _resolvePath(path);
   try {
     var isExists = fs.existsSync(modulePath);
     if (isExists) {

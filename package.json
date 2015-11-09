@@ -1,6 +1,6 @@
 {
   "name": "amdlib",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "Tools for AMD standard. check module legal, find dependency etc.",
   "main": "index.js",
   "scripts": {
