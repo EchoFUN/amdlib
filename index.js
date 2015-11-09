@@ -24,11 +24,11 @@ exports.config = function (opts) {
   basePath = opts.basePath;
 };
 
-function _dependency (path) {
+function _dependency(path) {
   if (!basePath) {
     process.exit();
   }
-  
+
   transversed[path] = true;
 
   var modulePath = basePath + path;
@@ -46,14 +46,14 @@ function _dependency (path) {
     if (isExists) {
       var buffer = fs.readFileSync(modulePath, 'utf8');
       var ast = esprima.parse(buffer);
-      
+
       var dependencyArray;
       estraverse.traverse(ast, {
         enter: function (node, parent) {
           try {
             var elements = node.elements, name = parent.callee.name;
             if (parent.type == 'CallExpression' && (name == 'require' || name == 'define') && node.type == 'ArrayExpression' && elements.length != 0) {
-              dependencyArray = elements; 
+              dependencyArray = elements;
               this.skip();
             }
           } catch (e) {
@@ -61,7 +61,7 @@ function _dependency (path) {
           }
         }
       });
-      
+
       dependencyArray.forEach(function (current, index, thisArray) {
         thisArray[index] = current.value;
       });
@@ -85,7 +85,19 @@ function _dependency (path) {
  * 
  */
 var tree = {}, transversed = {};
-module.exports.getDependency = function (path, deps, isflat) {
+
+var _flattenDp = function (dpData) {
+  var _dpData = [];
+  for (var i in dpData) {
+    if (dpData.hasOwnProperty(i)) {
+      _dpData.push(i);
+    }
+  }
+  return _dpData;
+};
+
+module.exports.getDependency = function (path, isflat, deps) {
+  isflat = isflat || true;
 
   if (deps != 1) {
     var currentTree = [];
@@ -99,16 +111,31 @@ module.exports.getDependency = function (path, deps, isflat) {
         }
       }
       */
-      
+
       for (var i = 0; i < currentTree.length; i++) {
-        this.getDependency(currentTree[i]);
+        this.getDependency(currentTree[i], isflat, deps);
       }
     }
-    
+
     if (isflat) {
-      return transversed; 
+      return _flattenDp(transversed);
     }
   } else {
     return _dependency(path);
   }
+};
+
+/**
+ * 
+ * 判断当前的模块，是不是一个有效地AMD模块
+ * 
+ * 
+ * 
+ */
+module.exports.isValidateAMD = function (path) {
+  if (!path) {
+    return 'is not a validate path.';
+  }
+
+
 };
