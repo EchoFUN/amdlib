@@ -21,7 +21,7 @@ var estraverse = require('estraverse');
 
 var basePath;
 exports.config = function (opts) {
-  basePath = opts.basePath;
+  basePath = opts.basePath || '';
 };
 
 function _dependency(path) {
