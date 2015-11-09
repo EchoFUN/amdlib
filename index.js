@@ -32,29 +32,39 @@ exports.config = function (opts) {
   conf.basePath = opts.basePath || '';
 };
 
-var _resolvePath = function (path) {
-  var modulePath = conf.basePath + path;
+var _addSuffix = function (path) {
   var suffixExpress = /\.([^\.]+)$/;
-  var results = suffixExpress.exec(modulePath);
+  var results = suffixExpress.exec(path);
   var ext;
+  var haserror = false;
   try {
     ext = results[1];
   } catch (e) {
-    modulePath += '.js';
+    haserror = true;
   }
+  if (haserror) {
+    path += '.js';
+  }
+  return path;
+};
 
-  return modulePath;
+var _removeSuffix = function (path) {
+  var paths = path.split('.');
+  if (paths.pop() === 'js') {
+    return paths.join();
+  }
+  return path;
 };
 
 function _dependency(path) {
-  transversed[path] = true;
+  transversed[_removeSuffix(path)] = true;
   
   // 路径的映射
-  var aliasPath = path;
-  if (conf.paths && conf.paths[path]) {
-    aliasPath = conf.paths[path]
+  var aliasPath = _addSuffix(path);
+  if (conf.paths && conf.paths[aliasPath]) {
+    aliasPath = conf.paths[aliasPath];
   }
-  var modulePath = _resolvePath(aliasPath);
+  var modulePath = conf.basePath + aliasPath;
   try {
     var isExists = fs.existsSync(modulePath);
     if (isExists) {
@@ -150,8 +160,6 @@ module.exports.isValidateAMD = function (path) {
   if (!path) {
     return 'is not a validate path.';
   }
-
-
 };
 
 /**
