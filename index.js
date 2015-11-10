@@ -78,7 +78,7 @@ function _dependency(path) {
             var elements = node.elements, name = parent.callee.name;
             if (parent.type == 'CallExpression' && (name == 'require' || name == 'define') && node.type == 'ArrayExpression' && elements.length != 0) {
               dependencyArray = elements;
-              this.skip();
+              this.break();
             }
           } catch (e) {
             ;
@@ -110,42 +110,44 @@ function _dependency(path) {
  */
 var tree = {}, transversed = {};
 
-var _flattenDp = function (dpData) {
+var _flattenDp = function (dpData, deps) {
   var _dpData = [];
   for (var i in dpData) {
     if (dpData.hasOwnProperty(i)) {
       _dpData.push(i);
     }
   }
+  if (deps == 1) {
+    transversed = {};
+  }
   return _dpData;
 };
 
 module.exports.getDependency = function (path, isflat, deps) {
+  if (!deps) {
+    deps = 0;
+  }
+  deps++;
+   
   isflat = isflat || true;
-
-  if (deps != 1) {
-    var currentTree = [];
-    if (!transversed[path]) {
-      currentTree = _dependency(path) || [];
-      
-      /*
-      if (deps && deps-- == 0) {
-        if (isflat) {
-          return transversed;
-        }
-      }
-      */
-
-      for (var i = 0; i < currentTree.length; i++) {
-        this.getDependency(currentTree[i], isflat, deps);
+  var currentTree = [];
+  if (!transversed[path]) {
+    currentTree = _dependency(path) || [];
+    
+    /*
+    if (deps && deps-- == 0) {
+      if (isflat) {
+        return transversed;
       }
     }
+    */
 
-    if (isflat) {
-      return _flattenDp(transversed);
+    for (var i = 0; i < currentTree.length; i++) {
+      this.getDependency(currentTree[i], isflat, deps);
     }
-  } else {
-    return _dependency(path);
+  }
+  if (isflat) {
+    return _flattenDp(transversed, deps);
   }
 };
 
