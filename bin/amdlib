@@ -12,7 +12,4 @@ var basePath = program.basePath, dpfile = program.rawArgs.pop();
 amdlib.set({
   basePath: basePath
 });
-
-
-console.log(basePath);
 console.log(amdlib.getDependency(dpfile, program.flat));
