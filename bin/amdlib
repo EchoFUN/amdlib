@@ -1,3 +1,18 @@
 #!/usr/bin/env node
 
+'use strict';
 
+var program = require('commander'), fs = require('fs');
+
+var amdlib = require('../index');
+
+program.option('-b, --basePath <n>', 'specify the base path of the module !').option('-f, --flat', 'print the dependency details as flat format').parse(process.argv);
+
+var basePath = program.basePath, dpfile = program.rawArgs.pop();
+amdlib.set({
+  basePath: basePath
+});
+
+
+console.log(basePath);
+console.log(amdlib.getDependency(dpfile, program.flat));

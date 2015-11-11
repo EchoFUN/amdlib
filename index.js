@@ -19,6 +19,8 @@ var fs = require('fs');
 var esprima = require('esprima');
 var estraverse = require('estraverse');
 
+var tree = require('tree');
+
 /**
  * 核心配置文件
  * 
@@ -108,7 +110,7 @@ function _dependency(path) {
  * @isflat Boolean 返回值的格式，是否为一个树，如果设置为false，则返回的是一个扁平化的结构
  * 
  */
-var tree = {}, transversed = {};
+var transversed = {};
 
 var _flattenDp = function (dpData, deps) {
   var _dpData = [];
@@ -123,31 +125,39 @@ var _flattenDp = function (dpData, deps) {
   return _dpData;
 };
 
-module.exports.getDependency = function (path, isflat, deps) {
+module.exports.getDependency = function (path, istree, deps, tree) {
   if (!deps) {
     deps = 0;
   }
   deps++;
 
-  isflat = isflat || true;
+  if (!tree) {
+    tree = {};
+  }
+
   var currentTree = [];
-  if (!transversed[path]) {
+  if (!transversed[path] || istree) {
     currentTree = _dependency(path) || [];
     
-    /*
-    if (deps && deps-- == 0) {
-      if (isflat) {
-        return transversed;
-      }
+    // TODO create Tree structure. at 2015-11-11 
+    tree[path] = '';
+    if (currentTree.length == 1) {
+      tree[path] = currentTree[0];
     }
-    */
-
+    if (currentTree.length > 1) {
+      tree[path] = {};
+    }
+    
     for (var i = 0; i < currentTree.length; i++) {
-      this.getDependency(currentTree[i], isflat, deps);
+      this.getDependency(currentTree[i], istree, deps, tree[path]);
     }
   }
-  if (isflat) {
+  if (!istree) {
     return _flattenDp(transversed, deps);
+  } else {
+    if (deps == 1) {
+      return tree;
+    }
   }
 };
 

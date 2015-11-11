@@ -4,7 +4,7 @@
 	"configurations": [
 		{
 			// Name of configuration; appears in the launch configuration drop down menu.
-			"name": "Launch test/index.js",
+			"name": "Launch test/dependency.js",
 			// Type of configuration.
 			"type": "node",
 			// Workspace relative or absolute path to the program.
