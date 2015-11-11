@@ -1,6 +1,7 @@
 # amdlib
 
 ## Install
+Install the tool from npm registry.
 ```javascript
 > npm install -g amdlib
 ```
