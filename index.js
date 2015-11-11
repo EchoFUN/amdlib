@@ -140,7 +140,7 @@ module.exports.getDependency = function (path, istree, deps, tree) {
     currentTree = _dependency(path) || [];
     
     // TODO create Tree structure. at 2015-11-11 
-    tree[path] = '';
+    tree[path] = '-';
     if (currentTree.length == 1) {
       tree[path] = currentTree[0];
     }
