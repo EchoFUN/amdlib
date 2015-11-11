@@ -1,7 +1,9 @@
 # amdlib
 
 ## Install
-
+```javascript
+> npm install -g amdlib
+```
 
 
 ## How to use
