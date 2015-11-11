@@ -128,7 +128,7 @@ module.exports.getDependency = function (path, isflat, deps) {
     deps = 0;
   }
   deps++;
-   
+
   isflat = isflat || true;
   var currentTree = [];
   if (!transversed[path]) {
@@ -173,7 +173,7 @@ module.exports.set = function (opts) {
   if (!opts) {
     return;
   }
-  
+
   for (var i in opts) {
     if (opts.hasOwnProperty(i) && !!opts[i]) {
       conf[i] = opts[i];
