@@ -10,13 +10,11 @@ var amdlib = require('../index.js');
 var treeify = require('treeify');
 
 amdlib.config({
-  basePath: '/Users/xukai/Documents/workspace/waimai_web/src/main/webapp/static/js/'
+  basePath: __dirname + '/demo/'
 })
 
-var dependency = amdlib.getDependency('page/map/seedsnew', true);
+var treedp = amdlib.getDependency('entry', true);
+var flatdp = amdlib.getDependency('entry');
 
-console.log(treeify.asTree(dependency, true));
-
-var dependency2 = amdlib.getDependency('page/home');
-
-debugger;
+console.log(treeify.asTree(treedp, true));
+console.log(treeify.asTree(flatdp, true));

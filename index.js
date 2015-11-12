@@ -107,7 +107,7 @@ function _dependency(path) {
  * 
  * @path String 需要分析的模块的路径
  * @deps Number 需要遍历的模块的深度
- * @isflat Boolean 返回值的格式，是否为一个树，如果设置为false，则返回的是一个扁平化的结构
+ * @istree Boolean 返回值的格式，是否为一个树，如果设置为false，则返回的是一个扁平化的结构
  * 
  */
 var transversed = {};
@@ -144,7 +144,7 @@ module.exports.getDependency = function (path, istree, deps, tree) {
     if (currentTree.length == 1) {
       tree[path] = currentTree[0];
     }
-    if (currentTree.length > 1) {
+    if (currentTree.length >= 1) {
       tree[path] = {};
     }
     
