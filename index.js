@@ -102,6 +102,7 @@ function _dependency(path) {
 
 };
 
+
 /**
  * 
  * 
@@ -123,6 +124,12 @@ var _flattenDp = function (dpData, deps) {
     transversed = {};
   }
   return _dpData;
+};
+
+module.exports.simpleDependency = function (path) {
+  var currentTree =  _dependency(path);
+  transversed = {};
+  return currentTree;
 };
 
 module.exports.getDependency = function (path, istree, deps, tree) {
@@ -156,6 +163,7 @@ module.exports.getDependency = function (path, istree, deps, tree) {
     return _flattenDp(transversed, deps);
   } else {
     if (deps == 1) {
+      transversed = {};
       return tree;
     }
   }

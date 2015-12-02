@@ -14,7 +14,7 @@ amdlib.config({
 })
 
 var treedp = amdlib.getDependency('entry', true);
-var flatdp = amdlib.getDependency('entry');
+var flatdp = amdlib.simpleDependency('entry');
 
 console.log(treeify.asTree(treedp, true));
 console.log(treeify.asTree(flatdp, true));
