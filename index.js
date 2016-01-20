@@ -110,7 +110,7 @@ function _dependency(path) {
       dependencyArray.forEach(function (current, index, thisArray) {
         thisArray[index] = current.value;
       });
-      return dependencyArray;
+      return _removeDuplicates(dependencyArray);
     } else {
       console.log('Path "' + modulePath + '" do not exists !');
       process.exit();
@@ -148,7 +148,7 @@ var _flattenDp = function (dpData, deps) {
 module.exports.simpleDependency = function (path) {
   var currentTree = _dependency(path);
   transversed = {};
-  return _removeDuplicates(currentTree);
+  return currentTree;
 };
 
 module.exports.getDependency = function (path, istree, deps, tree) {
