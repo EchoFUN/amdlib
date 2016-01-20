@@ -58,6 +58,25 @@ var _removeSuffix = function (path) {
   return path;
 };
 
+/**
+ * 加入一个去重的操作
+ * 
+ * 
+ */
+var _removeDuplicates = function (oriArr) {
+  var obj = {}, targetArr = [];
+  
+  for (var i = 0; i < oriArr.length; i++) {
+    if (obj[oriArr[i]]) {
+      ;
+    } else {
+      targetArr.push(oriArr[i]);
+      obj[oriArr[i]] = true;
+    }
+  }
+  return targetArr;
+};
+
 function _dependency(path) {
   transversed[_removeSuffix(path)] = true;
   
@@ -127,9 +146,9 @@ var _flattenDp = function (dpData, deps) {
 };
 
 module.exports.simpleDependency = function (path) {
-  var currentTree =  _dependency(path);
+  var currentTree = _dependency(path);
   transversed = {};
-  return currentTree;
+  return _removeDuplicates(currentTree);
 };
 
 module.exports.getDependency = function (path, istree, deps, tree) {
@@ -154,7 +173,7 @@ module.exports.getDependency = function (path, istree, deps, tree) {
     if (currentTree.length >= 1) {
       tree[path] = {};
     }
-    
+
     for (var i = 0; i < currentTree.length; i++) {
       this.getDependency(currentTree[i], istree, deps, tree[path]);
     }

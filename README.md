@@ -20,13 +20,18 @@ amdlib -b "path/to/" -t toto.js
 
 ### Program API
 ```javascript
-var amdlib = require('amdlib');
-amdlib.set({
-  basePath: '/'
-});
+var amdlib = require('../index.js');
+var treeify = require('treeify');
 
-var treedp = amdlib.getDependency('path/to/module', true);
-var flatdp = amdlib.getDependency('path/to/module');
+amdlib.config({
+  basePath: __dirname + '/demo/'
+})
+
+var treedp = amdlib.getDependency('entry', true);
+var flatdp = amdlib.simpleDependency('entry');
+
+console.log(treeify.asTree(treedp, true));
+console.log(treeify.asTree(flatdp, true));
 ```
 
 ## License
