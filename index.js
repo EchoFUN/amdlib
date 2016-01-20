@@ -73,14 +73,14 @@ function _dependency(path) {
       var buffer = fs.readFileSync(modulePath, 'utf8');
       var ast = esprima.parse(buffer);
 
-      var dependencyArray;
+      var dependencyArray = [];
       estraverse.traverse(ast, {
         enter: function (node, parent) {
           try {
             var elements = node.elements, name = parent.callee.name;
             if (parent.type == 'CallExpression' && (name == 'require' || name == 'define') && node.type == 'ArrayExpression' && elements.length != 0) {
-              dependencyArray = elements;
-              this.break();
+              dependencyArray = dependencyArray.concat(elements);
+              // this.break();
             }
           } catch (e) {
             ;
