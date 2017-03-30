@@ -41,6 +41,10 @@ var _addSuffix = function (path) {
   var haserror = false;
   try {
     ext = results[1];
+    // if path like lib/jquery.min, still need to add .js
+    if(ext != 'js'){
+      haserror = true;
+    }
   } catch (e) {
     haserror = true;
   }
@@ -53,7 +57,7 @@ var _addSuffix = function (path) {
 var _removeSuffix = function (path) {
   var paths = path.split('.');
   if (paths.pop() === 'js') {
-    return paths.join();
+    return path.replace(/\.js$/,'');
   }
   return path;
 };
